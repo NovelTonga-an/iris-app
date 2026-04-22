@@ -2,18 +2,63 @@ import streamlit as st
 import joblib
 import numpy as np
 
+# --- 1. LOAD THE BRAIN ---
+# Make sure 'iris_model.joblib' is in the same GitHub folder
 model = joblib.load('iris_model.joblib')
 
-st.title("🌸 Iris Flower Predictor")
+# --- 2. PAGE CONFIGURATION ---
+st.set_page_config(page_title="Iris Species Predictor", page_icon="🌸")
 
-# Sliders for user input
-s_len = st.slider("Sepal Length", 4.0, 8.0, 5.0)
-s_wid = st.slider("Sepal Width", 2.0, 4.5, 3.0)
-p_len = st.slider("Petal Length", 1.0, 7.0, 1.5)
-p_wid = st.slider("Petal Width", 0.1, 2.5, 0.2)
+# --- 3. SIDEBAR LAYOUT ---
+st.sidebar.header("User Input Parameters")
+st.sidebar.write("Adjust the sliders to input flower measurements.")
 
-if st.button("Predict"):
-    data = np.array([[s_len, s_wid, p_len, p_wid]])
-    prediction = model.predict(data)
+def user_input_features():
+    sepal_length = st.sidebar.slider('Sepal length', 4.3, 7.9, 5.4)
+    sepal_width = st.sidebar.slider('Sepal width', 2.0, 4.4, 3.4)
+    petal_length = st.sidebar.slider('Petal length', 1.0, 6.9, 1.3)
+    petal_width = st.sidebar.slider('Petal width', 0.1, 2.5, 0.2)
+    data = {'sepal_length': sepal_length,
+            'sepal_width': sepal_width,
+            'petal_length': petal_length,
+            'petal_width': petal_width}
+    return np.array([[sepal_length, sepal_width, petal_length, petal_width]])
+
+input_df = user_input_features()
+
+# --- 4. MAIN PAGE UI ---
+st.title("🌸 Iris Flower Classification App")
+st.markdown("""
+This app predicts the **Iris flower** type based on its measurements.
+The model was trained in Google Colab and deployed using **Streamlit** and **Joblib**.
+""")
+
+# Display the inputs in a nice table
+st.subheader('Selected Input Measurements')
+st.write(pd.DataFrame(input_df, columns=['Sepal Length', 'Sepal Width', 'Petal Length', 'Petal Width']))
+
+# --- 5. PREDICTION LOGIC ---
+if st.button('Predict Flower Species'):
+    prediction = model.predict(input_df)
+    prediction_proba = model.predict_proba(input_df)
+
     species = ['Setosa', 'Versicolor', 'Virginica']
-    st.success(f"Result: {species[prediction[0]]}")
+    result = species[prediction[0]]
+
+    # Display Result
+    st.subheader('Prediction Result')
+    st.success(f"The AI model predicts this is a **{result}**.")
+    
+    # Show confidence levels
+    st.subheader('Prediction Confidence')
+    for i, s in enumerate(species):
+        st.write(f"{s}: {prediction_proba[0][i]*100:.2f}%")
+
+# --- 6. FOOTER ---
+with st.expander("About the Project"):
+    st.write("""
+    - **Developer:** [Your Name]
+    - **Course:** BSIT 3rd Year
+    - **Model:** Random Forest Classifier
+    - **Tools:** Python, Scikit-learn, Joblib, Streamlit
+    """)
