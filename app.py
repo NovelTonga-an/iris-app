@@ -27,12 +27,7 @@ def user_input_features():
 
 input_df = user_input_features()
 
-# --- 4. MAIN PAGE UI ---
 st.title("🌸 Iris Flower Classification App")
-st.markdown("""
-This app predicts the **Iris flower** type based on its measurements.
-The model was trained in Google Colab and deployed using **Streamlit** and **Joblib**.
-""")
 
 # Display the inputs in a nice table
 st.subheader('Selected Input Measurements')
@@ -54,12 +49,3 @@ if st.button('Predict Flower Species'):
     st.subheader('Prediction Confidence')
     for i, s in enumerate(species):
         st.write(f"{s}: {prediction_proba[0][i]*100:.2f}%")
-
-# --- 6. FOOTER ---
-with st.expander("About the Project"):
-    st.write("""
-    - **Developer:** [Your Name]
-    - **Course:** BSIT 3rd Year
-    - **Model:** Random Forest Classifier
-    - **Tools:** Python, Scikit-learn, Joblib, Streamlit
-    """)
