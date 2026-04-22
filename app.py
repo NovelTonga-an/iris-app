@@ -43,9 +43,6 @@ if st.button('Predict Flower Species'):
 
     # Display Result
     st.subheader('Prediction Result')
-    st.success(f"The AI model predicts this is a **{result}**.")
+    st.success(f"This is a **{result}**.")
     
-    # Show confidence levels
-    st.subheader('Prediction Confidence')
-    for i, s in enumerate(species):
-        st.write(f"{s}: {prediction_proba[0][i]*100:.2f}%")
+    
