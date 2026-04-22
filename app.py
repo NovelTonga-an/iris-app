@@ -1,6 +1,7 @@
 import streamlit as st
 import joblib
 import numpy as np
+import pandas as pd
 
 # --- 1. LOAD THE BRAIN ---
 # Make sure 'iris_model.joblib' is in the same GitHub folder
